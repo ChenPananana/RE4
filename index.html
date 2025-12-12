@@ -343,13 +343,13 @@
         <div class="stats-summary">
             <div class="stat-card">
                 <div class="icon"><i class="fas fa-car-crash"></i></div>
-                <div class="stat-number" id="total-alarms">63</div>
+                <div class="stat-number" id="total-alarms">64</div>
                 <div class="stat-label">全年报警总数</div>
             </div>
             
             <div class="stat-card">
                 <div class="icon"><i class="fas fa-users"></i></div>
-                <div class="stat-number" id="total-drivers">33</div>
+                <div class="stat-number" id="total-drivers">31</div>
                 <div class="stat-label">涉事驾驶员总数</div>
             </div>
             
@@ -361,7 +361,7 @@
             
             <div class="stat-card">
                 <div class="icon"><i class="fas fa-phone-alt"></i></div>
-                <div class="stat-number" id="phone-alarms">43</div>
+                <div class="stat-number" id="phone-alarms">44</div>
                 <div class="stat-label">接打电话报警次数</div>
             </div>
         </div>
@@ -380,14 +380,14 @@
             
             <div class="alarm-type-chart">
                 <div class="bar-container">
-                    <div class="bar-value" id="phone-count">43</div>
-                    <div class="bar" id="phone-bar" style="height: 180px;"></div>
+                    <div class="bar-value" id="phone-count">44</div>
+                    <div class="bar" id="phone-bar" style="height: 0;"></div>
                     <div class="bar-label">接打电话</div>
                 </div>
                 
                 <div class="bar-container">
                     <div class="bar-value" id="smoking-count">20</div>
-                    <div class="bar" id="smoking-bar" style="height: 85px;"></div>
+                    <div class="bar" id="smoking-bar" style="height: 0;"></div>
                     <div class="bar-label">抽烟</div>
                 </div>
             </div>
@@ -395,14 +395,14 @@
             <div class="alarm-type-stats">
                 <div class="type-stat">
                     <div class="type-name">接打电话报警</div>
-                    <div class="type-count" style="color: #3498db;">43 次</div>
-                    <div class="stat-label">占总报警数 68.25%</div>
+                    <div class="type-count" style="color: #3498db;">44 次</div>
+                    <div class="stat-label">占总报警数 68.75%</div>
                 </div>
                 
                 <div class="type-stat">
                     <div class="type-name">抽烟报警</div>
                     <div class="type-count" style="color: #e74c3c;">20 次</div>
-                    <div class="stat-label">占总报警数 31.75%</div>
+                    <div class="stat-label">占总报警数 31.25%</div>
                 </div>
             </div>
         </div>
@@ -415,23 +415,55 @@
     </div>
 
     <script>
-        // 从Excel数据中提取驾驶员报警次数
+        // 基于新数据表统计驾驶员报警次数
+        // 从表格数据手动统计（共64条记录）
         const driverData = [
-            { name: "王永林", count: 10, smoking: 1, phone: 9, group: "一组" },
+            // 王永林：3月抽烟1次 + 5月接打电话1次 + 7月接打电话1次 + 8月接打电话1次 + 9月接打电话2次 + 10月接打电话2次 + 11月接打电话3次 = 11次
+            { name: "王永林", count: 11, smoking: 1, phone: 10, group: "一组" },
+            // 汤同军：8月接打电话1次 + 抽烟1次 + 接打电话4次 + 12月接打电话1次 = 7次
             { name: "汤同军", count: 7, smoking: 1, phone: 6, group: "一组" },
-            { name: "张云山", count: 3, smoking: 2, phone: 1, group: "一组" },
+            // 李金元：4月接打电话1次 + 6月抽烟1次 + 8月接打电话1次 = 3次
             { name: "李金元", count: 3, smoking: 1, phone: 2, group: "二组" },
-            { name: "徐宏歌", count: 3, smoking: 0, phone: 3, group: "一组" },
+            // 张云山：8月抽烟1次 + 接打电话1次 + 9月抽烟1次 = 3次
+            { name: "张云山", count: 3, smoking: 2, phone: 1, group: "一组" },
+            // 宋立余：6月抽烟1次 + 8月抽烟1次 + 9月抽烟1次 = 3次
             { name: "宋立余", count: 3, smoking: 3, phone: 0, group: "四组" },
+            // 顾万兴：7月抽烟1次 + 8月抽烟2次 = 3次
             { name: "顾万兴", count: 3, smoking: 3, phone: 0, group: "一组" },
-            { name: "许勇", count: 2, smoking: 0, phone: 2, group: "一组" },
-            { name: "蒋继虎", count: 2, smoking: 1, phone: 1, group: "一组" },
-            { name: "张林峰", count: 2, smoking: 2, phone: 0, group: "四组" },
-            { name: "高凤民", count: 2, smoking: 2, phone: 0, group: "四组" },
-            { name: "朱海", count: 2, smoking: 0, phone: 2, group: "一组" },
-            { name: "米国防", count: 2, smoking: 0, phone: 2, group: "四组" },
+            // 徐宏歌：11月接打电话2次 + 12月接打电话1次 = 3次
+            { name: "徐宏歌", count: 3, smoking: 0, phone: 3, group: "一组" },
+            // 李欢：9月接打电话3次 = 3次
             { name: "李欢", count: 3, smoking: 0, phone: 3, group: "二组" },
-            { name: "王永林", count: 10, smoking: 1, phone: 9, group: "一组" }
+            // 许勇：2月接打电话1次 + 3月接打电话1次 = 2次
+            { name: "许勇", count: 2, smoking: 0, phone: 2, group: "一组" },
+            // 蒋继虎：4月接打电话1次 + 8月接打电话1次 + 11月抽烟1次 = 3次（注意：总数为3次）
+            { name: "蒋继虎", count: 3, smoking: 1, phone: 2, group: "一组" },
+            // 张林峰：2月抽烟1次 + 7月抽烟1次 + 10月抽烟1次 = 3次
+            { name: "张林峰", count: 3, smoking: 3, phone: 0, group: "四组" },
+            // 高凤民：1月抽烟1次 + 7月抽烟1次 = 2次
+            { name: "高凤民", count: 2, smoking: 2, phone: 0, group: "四组" },
+            // 朱海：3月接打电话1次 + 11月接打电话1次 = 2次
+            { name: "朱海", count: 2, smoking: 0, phone: 2, group: "一组" },
+            // 米国防：6月接打电话2次 = 2次
+            { name: "米国防", count: 2, smoking: 0, phone: 2, group: "四组" },
+            // 其他驾驶员（1次报警）
+            { name: "丁培永", count: 1, smoking: 0, phone: 1, group: "二组" },
+            { name: "唐国生", count: 1, smoking: 1, phone: 0, group: "一组" },
+            { name: "周卫东", count: 1, smoking: 0, phone: 1, group: "五组" },
+            { name: "刘毅", count: 1, smoking: 0, phone: 1, group: "五组" },
+            { name: "姜大伟", count: 1, smoking: 0, phone: 1, group: "一组" },
+            { name: "史桂龙", count: 1, smoking: 1, phone: 0, group: "二组" },
+            { name: "蒋晓军", count: 1, smoking: 1, phone: 0, group: "一组" },
+            { name: "王辉跃", count: 1, smoking: 1, phone: 0, group: "一组" },
+            { name: "宋之军", count: 1, smoking: 0, phone: 1, group: "五组" },
+            { name: "谷秀", count: 1, smoking: 0, phone: 1, group: "四组" },
+            { name: "王启中", count: 1, smoking: 0, phone: 1, group: "五组" },
+            { name: "杨建", count: 1, smoking: 0, phone: 1, group: "一组" },
+            { name: "崔猛", count: 1, smoking: 0, phone: 1, group: "四组" },
+            { name: "孙军", count: 1, smoking: 1, phone: 0, group: "一组" },
+            { name: "沈吉浪", count: 1, smoking: 1, phone: 0, group: "五组" },
+            { name: "赵飞飞", count: 1, smoking: 0, phone: 1, group: "一组" },
+            { name: "严丁国", count: 1, smoking: 1, phone: 0, group: "一组" }
         ];
         
         // 去重并计算总次数
@@ -486,32 +518,42 @@
         });
         
         // 更新统计数据
-        document.getElementById('total-alarms').textContent = '63';
-        document.getElementById('total-drivers').textContent = '33';
+        document.getElementById('total-alarms').textContent = '64';
+        document.getElementById('total-drivers').textContent = '31'; // 实际统计31名驾驶员
         document.getElementById('smoking-alarms').textContent = '20';
-        document.getElementById('phone-alarms').textContent = '43';
+        document.getElementById('phone-alarms').textContent = '44';
+        
+        // 更新条形图数值
+        document.getElementById('phone-count').textContent = '44';
+        document.getElementById('smoking-count').textContent = '20';
         
         // 添加动画效果
         document.addEventListener('DOMContentLoaded', function() {
             // 为条形图添加动画
             setTimeout(() => {
-                document.getElementById('phone-bar').style.height = '180px';
-                document.getElementById('smoking-bar').style.height = '85px';
+                document.getElementById('phone-bar').style.height = '190px';  // 44次报警
+                document.getElementById('smoking-bar').style.height = '86px';   // 20次报警
             }, 500);
             
             // 为统计数字添加计数动画
-            const statNumbers = document.querySelectorAll('.stat-number');
+            const statNumbers = document.querySelectorAll('.stat-number, .type-count');
             statNumbers.forEach(stat => {
-                const target = parseInt(stat.textContent);
+                const currentText = stat.textContent;
+                const target = parseInt(currentText.replace(/[^0-9]/g, ''));
                 let current = 0;
                 const increment = target / 50;
                 const timer = setInterval(() => {
                     current += increment;
                     if (current >= target) {
-                        stat.textContent = target;
+                        stat.textContent = currentText;
                         clearInterval(timer);
                     } else {
-                        stat.textContent = Math.floor(current);
+                        // 只更新数字部分
+                        if (stat.classList.contains('type-count')) {
+                            stat.textContent = Math.floor(current) + ' 次';
+                        } else {
+                            stat.textContent = Math.floor(current);
+                        }
                     }
                 }, 30);
             });
