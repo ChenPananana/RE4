@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>众轩1-12月不安全驾驶行为报警统计</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 5px solid #3498db;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card:nth-child(2) {
+            border-left-color: #e74c3c;
+        }
+        
+        .stat-card:nth-child(3) {
+            border-left-color: #2ecc71;
+        }
+        
+        .stat-card:nth-child(4) {
+            border-left-color: #f39c12;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+        
+        .icon {
+            font-size: 2.2rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .top-drivers {
+            margin-bottom: 50px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .driver-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .driver-item {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            border-left: 5px solid transparent;
+        }
+        
+        .driver-item:hover {
+            background-color: #eef5ff;
+            transform: translateX(5px);
+        }
+        
+        .driver-item:nth-child(1) {
+            border-left-color: #e74c3c;
+            background-color: #fff5f5;
+        }
+        
+        .driver-item:nth-child(2) {
+            border-left-color: #f39c12;
+        }
+        
+        .driver-item:nth-child(3) {
+            border-left-color: #f1c40f;
+        }
+        
+        .driver-item:nth-child(4) {
+            border-left-color: #3498db;
+        }
+        
+        .driver-item:nth-child(5) {
+            border-left-color: #2ecc71;
+        }
+        
+        .rank {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #7f8c8d;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .driver-info {
+            flex: 1;
+        }
+        
+        .driver-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .driver-details {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .badge-smoking {
+            background-color: #ffeaa7;
+            color: #d35400;
+        }
+        
+        .badge-phone {
+            background-color: #a29bfe;
+            color: #2d3436;
+        }
+        
+        .count {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            padding: 0 15px;
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ecf0f1, transparent);
+            margin: 40px 0;
+        }
+        
+        .alarm-type-chart {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 250px;
+            margin: 40px 0;
+            gap: 40px;
+        }
+        
+        .bar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .bar {
+            width: 60px;
+            border-radius: 8px 8px 0 0;
+            background: linear-gradient(to top, #3498db, #2ecc71);
+            transition: height 1s ease;
+        }
+        
+        .bar-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .bar-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .alarm-type-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .type-stat {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            min-width: 180px;
+        }
+        
+        .type-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .type-count {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid #ecf0f1;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .driver-item {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+            
+            .rank {
+                min-width: auto;
+                margin-bottom: 10px;
+            }
+            
+            .count {
+                margin-top: 10px;
+            }
+            
+            .alarm-type-chart {
+                gap: 20px;
+            }
+            
+            .bar {
+                width: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>众轩1月-12月不安全驾驶行为报警统计</h1>
+            <p class="subtitle">基于2025年全年抽烟、接打电话等不安全驾驶行为报警数据分析</p>
+        </header>
+        
+        <div class="stats-summary">
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-car-crash"></i></div>
+                <div class="stat-number" id="total-alarms">63</div>
+                <div class="stat-label">全年报警总数</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-users"></i></div>
+                <div class="stat-number" id="total-drivers">33</div>
+                <div class="stat-label">涉事驾驶员总数</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-smoking"></i></div>
+                <div class="stat-number" id="smoking-alarms">20</div>
+                <div class="stat-label">抽烟报警次数</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-phone-alt"></i></div>
+                <div class="stat-number" id="phone-alarms">43</div>
+                <div class="stat-label">接打电话报警次数</div>
+            </div>
+        </div>
+        
+        <div class="top-drivers">
+            <h2><i class="fas fa-trophy"></i> 报警次数最多的驾驶员（前五名）</h2>
+            <div class="driver-list" id="top-drivers-list">
+                <!-- 驾驶员排名将通过JavaScript动态生成 -->
+            </div>
+        </div>
+        
+        <div class="section-divider"></div>
+        
+        <div class="alarm-type-analysis">
+            <h2><i class="fas fa-chart-pie"></i> 报警类型分布</h2>
+            
+            <div class="alarm-type-chart">
+                <div class="bar-container">
+                    <div class="bar-value" id="phone-count">43</div>
+                    <div class="bar" id="phone-bar" style="height: 180px;"></div>
+                    <div class="bar-label">接打电话</div>
+                </div>
+                
+                <div class="bar-container">
+                    <div class="bar-value" id="smoking-count">20</div>
+                    <div class="bar" id="smoking-bar" style="height: 85px;"></div>
+                    <div class="bar-label">抽烟</div>
+                </div>
+            </div>
+            
+            <div class="alarm-type-stats">
+                <div class="type-stat">
+                    <div class="type-name">接打电话报警</div>
+                    <div class="type-count" style="color: #3498db;">43 次</div>
+                    <div class="stat-label">占总报警数 68.25%</div>
+                </div>
+                
+                <div class="type-stat">
+                    <div class="type-name">抽烟报警</div>
+                    <div class="type-count" style="color: #e74c3c;">20 次</div>
+                    <div class="stat-label">占总报警数 31.75%</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>数据统计周期：2025年1月1日 - 2025年12月31日</p>
+            <p>注：所有报警记录中"是否误报"字段均为"否"，即均为有效报警</p>
+            <p>© 2025 众轩不安全驾驶行为报警统计系统</p>
+        </footer>
+    </div>
+
+    <script>
+        // 从Excel数据中提取驾驶员报警次数
+        const driverData = [
+            { name: "王永林", count: 10, smoking: 1, phone: 9, group: "一组" },
+            { name: "汤同军", count: 7, smoking: 1, phone: 6, group: "一组" },
+            { name: "张云山", count: 3, smoking: 2, phone: 1, group: "一组" },
+            { name: "李金元", count: 3, smoking: 1, phone: 2, group: "二组" },
+            { name: "徐宏歌", count: 3, smoking: 0, phone: 3, group: "一组" },
+            { name: "宋立余", count: 3, smoking: 3, phone: 0, group: "四组" },
+            { name: "顾万兴", count: 3, smoking: 3, phone: 0, group: "一组" },
+            { name: "许勇", count: 2, smoking: 0, phone: 2, group: "一组" },
+            { name: "蒋继虎", count: 2, smoking: 1, phone: 1, group: "一组" },
+            { name: "张林峰", count: 2, smoking: 2, phone: 0, group: "四组" },
+            { name: "高凤民", count: 2, smoking: 2, phone: 0, group: "四组" },
+            { name: "朱海", count: 2, smoking: 0, phone: 2, group: "一组" },
+            { name: "米国防", count: 2, smoking: 0, phone: 2, group: "四组" },
+            { name: "李欢", count: 3, smoking: 0, phone: 3, group: "二组" },
+            { name: "王永林", count: 10, smoking: 1, phone: 9, group: "一组" }
+        ];
+        
+        // 去重并计算总次数
+        const driverMap = new Map();
+        driverData.forEach(driver => {
+            if (driverMap.has(driver.name)) {
+                const existing = driverMap.get(driver.name);
+                existing.count += driver.count;
+                existing.smoking += driver.smoking;
+                existing.phone += driver.phone;
+            } else {
+                driverMap.set(driver.name, { 
+                    name: driver.name, 
+                    count: driver.count, 
+                    smoking: driver.smoking, 
+                    phone: driver.phone,
+                    group: driver.group
+                });
+            }
+        });
+        
+        // 转换为数组并按报警次数排序
+        const sortedDrivers = Array.from(driverMap.values()).sort((a, b) => b.count - a.count);
+        
+        // 取前五名
+        const topFiveDrivers = sortedDrivers.slice(0, 5);
+        
+        // 渲染前五名驾驶员
+        const topDriversList = document.getElementById('top-drivers-list');
+        
+        topFiveDrivers.forEach((driver, index) => {
+            const rankColors = ['#e74c3c', '#f39c12', '#f1c40f', '#3498db', '#2ecc71'];
+            const rankIcons = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+            
+            const driverItem = document.createElement('div');
+            driverItem.className = 'driver-item';
+            
+            driverItem.innerHTML = `
+                <div class="rank" style="color: ${rankColors[index]}">${rankIcons[index]}</div>
+                <div class="driver-info">
+                    <div class="driver-name">${driver.name}</div>
+                    <div class="driver-details">
+                        <span class="badge badge-smoking">抽烟报警: ${driver.smoking} 次</span>
+                        <span class="badge badge-phone">接打电话报警: ${driver.phone} 次</span>
+                        <span> | 所属组别: ${driver.group}</span>
+                    </div>
+                </div>
+                <div class="count" style="color: ${rankColors[index]}">${driver.count} 次</div>
+            `;
+            
+            topDriversList.appendChild(driverItem);
+        });
+        
+        // 更新统计数据
+        document.getElementById('total-alarms').textContent = '63';
+        document.getElementById('total-drivers').textContent = '33';
+        document.getElementById('smoking-alarms').textContent = '20';
+        document.getElementById('phone-alarms').textContent = '43';
+        
+        // 添加动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为条形图添加动画
+            setTimeout(() => {
+                document.getElementById('phone-bar').style.height = '180px';
+                document.getElementById('smoking-bar').style.height = '85px';
+            }, 500);
+            
+            // 为统计数字添加计数动画
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current);
+                    }
+                }, 30);
+            });
+        });
+    </script>
+</body>
+</html>
